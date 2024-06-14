@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clonar el Repositorio'){
             steps {
-                git branch: 'main', url: 'https://github.com/nickend12/escalamiento-master.git'
+                git branch: 'main', url: 'https://github.com/nickend12/escalamiento-master-main.git'
             }
         }
         stage('Construir imagen de Docker'){
