@@ -2,14 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Clonar el Repositorio'){
+        stage('Clonar el Repositorio') {
             steps {
+                // Clona el repositorio desde GitHub
                 git branch: 'main', url: 'https://github.com/nickend12/escalamiento-master-main.git'
             }
         }
-        stage('Construir imagen de Docker'){
+        
+        stage('Construir imagen de Docker') {
             steps {
                 script {
+                    // Construye la imagen de Docker usando la URL de MongoDB como argumento
                     withCredentials([
                         string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                     ]) {
@@ -18,11 +21,13 @@ pipeline {
                 }
             }
         }
-        stage('Desplegar contenedores Docker'){
+        
+        stage('Desplegar contenedores Docker') {
             steps {
                 script {
+                    // Despliega los contenedores Docker usando docker-compose
                     withCredentials([
-                            string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
+                        string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                     ]) {
                         sh 'docker compose up -d'
                     }
@@ -33,6 +38,7 @@ pipeline {
 
     post {
         always {
+            // Envia un correo electrónico con el estado del build
             emailext (
                 subject: "Status del build: ${currentBuild.currentResult}",
                 body: "Se ha completado el build. Puede detallar en: ${env.BUILD_URL}",
